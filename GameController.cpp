@@ -8,19 +8,20 @@ GameController::GameController() {
     isContinue = true;
     score = 0;
     sneak = new Sneak(Cartesian{WIDTH / 2, HEIGHT / 2});
-
     fruit = new Fruit(Cartesian{rand() % WIDTH, rand() % HEIGHT});
 }
 
-#include "GameController.h"
 
 void GameController::Run() {
     while (isContinue) {
         input();
         physicsUpdate();
         update();
-        Sleep(100);
+        Sleep(80);
     }
+
+    int a;
+    std::cin >> a;
 }
 
 void GameController::input() {
@@ -56,12 +57,13 @@ void GameController::physicsUpdate() {
 
     // Check collision with walls
     if (
-            position.x > WIDTH ||
-            position.x < 0 ||
-            position.y > HEIGHT ||
-            position.y < 0
+            position.x > WIDTH - 1 ||
+            position.x < 1 ||
+            position.y > HEIGHT - 1 ||
+            position.y < 1
             ) {
         isContinue = false;
+        message = "Zjedles sciane\n";
         return;
     }
 
@@ -69,12 +71,10 @@ void GameController::physicsUpdate() {
     for (const auto &scale : sneak->GetTail()) {
         if (position == scale) {
             isContinue = false;
+            message = "Zjedles ogon\n";
             return;
         }
     }
-
-    // Move snake
-    sneak->Move();
 
     // Eat fruit
     if (position == fruit->GetPosition()) {
@@ -82,8 +82,12 @@ void GameController::physicsUpdate() {
         sneak->Eat();
 
         delete fruit;
-        fruit = new Fruit(Cartesian{rand() % WIDTH, rand() % HEIGHT});
+        srand(time(NULL));
+        fruit = new Fruit(Cartesian{(rand() % (WIDTH - 2)) + 1, (rand() % (HEIGHT - 2)) + 1});
     }
+
+    // Move snake
+    sneak->Move();
 }
 
 void GameController::update() {
@@ -92,11 +96,11 @@ void GameController::update() {
     std::cout << std::string(WIDTH, '#') << std::endl;
 
     Cartesian current = {0, 1};
-    for (; current.x < HEIGHT; ++current.x) {
+    for (; current.y < HEIGHT; ++current.y) {
 
         std::cout << '#';
 
-        for (; current.y < WIDTH - 1; ++current.y) {
+        for (current.x = 1; current.x < WIDTH - 1; ++current.x) {
 
             // Print head
             if (current == sneak->GetPosition()) {
@@ -129,7 +133,8 @@ void GameController::update() {
     }
 
     std::cout << std::string(WIDTH, '#') << std::endl
-            << "Wynik: " << score << std::endl;
+            << "Wynik: " << score << std::endl
+            << message;
 
 }
 

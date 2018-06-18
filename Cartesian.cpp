@@ -20,7 +20,7 @@ Cartesian Cartesian::operator+(const Cartesian &c) {
 }
 
 Cartesian Cartesian::operator*(const Cartesian::Unit &mul) {
-    x *= mul;
+    x *= mul; // mnozenie z liczba
     y *= mul;
 
     return *this;

@@ -14,10 +14,10 @@ public:
     class Tail: public std::list<Cartesian> {};
 
 private:
+    bool popTail;
     Cartesian position;
     Tail tail;
     Cartesian direction;
-    Cartesian::Unit velocity;
 
 public:
     explicit Sneak(Cartesian position);

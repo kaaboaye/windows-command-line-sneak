@@ -7,7 +7,7 @@
 Sneak::Sneak(Cartesian position) {
     this->position = position;
     this->direction = {0, 0};
-    this->velocity = 1;
+    this->popTail = true;
 }
 
 void Sneak::SetDirection(Direction direction) {
@@ -17,19 +17,19 @@ void Sneak::SetDirection(Direction direction) {
             break;
 
         case UP:
-            this->direction = {1, 0};
-            break;
-
-        case DOWN:
-            this->direction = {-1, 0};
-            break;
-
-        case LEFT:
             this->direction = {0, -1};
             break;
 
-        case RIGHT:
+        case DOWN:
             this->direction = {0, 1};
+            break;
+
+        case LEFT:
+            this->direction = {-1, 0};
+            break;
+
+        case RIGHT:
+            this->direction = {1, 0};
             break;
     }
 }
@@ -42,11 +42,20 @@ const Sneak::Tail &Sneak::GetTail() const {
     return tail;
 }
 
+
 void Sneak::Move() {
-    position += direction * velocity;
+    tail.push_front(position);
+
+    if (popTail) {
+        tail.pop_back();
+    } else {
+        popTail = true;
+    }
+
+    position += direction;
 }
 
 void Sneak::Eat() {
-    tail.push_front(position);
+    popTail = false;
 }
 

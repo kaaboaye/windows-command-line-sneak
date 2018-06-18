@@ -9,6 +9,7 @@
 #include <string>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 #include "Sneak.h"
 #include "Fruit.h"
 
@@ -18,6 +19,7 @@
 class GameController {
     bool isContinue;
     int score;
+    std::string message;
     Sneak *sneak;
     Fruit *fruit;
 
